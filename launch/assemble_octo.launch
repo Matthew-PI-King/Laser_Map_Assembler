@@ -1,0 +1,27 @@
+<launch>
+	<node pkg="laser_map_assembler" type="laser_map_assembler_node" name="laser_map_assembler_node" output="screen">
+		<remap from="input" to="sync_scan_cloud_filtered" />
+	</node>
+	
+	 <node pkg="nodelet" type="nodelet" name="standalone_nodelet"  args="manager">
+	<remap from="cloud_in" to="sync_scan_cloud_filtered" />
+	</node>
+
+  	<node pkg="nodelet" type="nodelet" name="octomap_server_nodelet" args="load octomap_server/OctomapServerNodelet standalone_nodelet">
+		<param name="resolution" value="0.05" />
+		
+		<!-- fixed map frame (set to 'map' if SLAM or localization running!) -->
+		<param name="frame_id" type="string" value="map"/>
+		
+		<!-- maximum range to integrate (speedup!) -->
+		<param name="sensor_model/max_range" value="-1" />
+		
+		<!-- data source to integrate (PointCloud2) -->
+		<remap from="cloud_in" to="latest" />
+	 
+	  <!-- output collision map -->
+	  <remap from="octomap_server_nodelet/collision_map_out" to="collision_map_out"/>
+	
+	</node>
+
+</launch>

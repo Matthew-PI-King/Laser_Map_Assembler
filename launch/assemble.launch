@@ -1,0 +1,10 @@
+<launch>
+	<node pkg="laser_map_assembler" type="laser_map_assembler_node" name="laser_map_assembler_node" output="screen">
+		<remap from="input" to="sync_scan_cloud_filtered" />
+	</node>
+	
+	 <node pkg="nodelet" type="nodelet" name="standalone_nodelet"  args="manager">
+	<remap from="cloud_in" to="sync_scan_cloud_filtered" />
+	</node>
+
+</launch>
